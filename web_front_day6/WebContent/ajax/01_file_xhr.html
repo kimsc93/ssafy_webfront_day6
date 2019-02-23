@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<button id="jsonget">json get</button>
+	<ul id="dataarea"></ul>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	// TODO: jsonget에서 click 이벤트 발생 시 
+	//       info.json를 읽고 제목을 dataarea에 출력하는 애플리케이션을 작성하시오.
+	$("#jsonget").on("click", function(){
+		//console.log("click");
+		let xhr = new XMLHttpRequest();
+		// 1. 편지봉투 작성
+		xhr.open("get", "./info.json", true);
+		// 2. 편지 보내기
+		xhr.send();
+		
+		//console.log(xhr.responseText);
+		$(xhr).on("readystatechange", function(){
+			console.log(xhr.readyState+" : "+xhr.status);
+			if(xhr.readyState==4 && xhr.status==200){
+				//console.log(xhr.responseText);
+				let json = JSON.parse(xhr.responseText);
+				console.log(json);
+				$("#dataarea").empty();
+				$.each(json.movie, function(idx, item){
+					console.log(idx, item);
+					$("#dataarea").append("<li>"+item.title);
+				})
+			}
+		});
+		
+		
+		
+	});
+	// END:
+</script>
+</html>

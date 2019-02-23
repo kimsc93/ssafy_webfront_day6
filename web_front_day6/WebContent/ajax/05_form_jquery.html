@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<META http-equiv="Expires" content="-1"> 
+<META http-equiv="Pragma" content="no-cache"> 
+<META http-equiv="Cache-Control" content="No-Cache"> 
+</head>
+<body>
+	<form method="get" action="./ajaxForm">
+		<input type="text" name="id" id="id">
+		<input type="text" name="pass" id="pass">
+		<input type="number" name="age" id="age">
+		<input type="submit" value="form 전송">
+		<input type="button" value="ajax 전송" id="send">
+	</form>
+	<div id="result"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	// TODO: send 클릭 시 폼의 내용을 ./ajaxForm에 전송하시오.
+	$("#send").on("click", function(){
+		$.ajax({
+			url:"./ajaxForm",
+			type:"post",
+			/* data:{
+				id:$("#id").val(),
+				pass:$("#pass").val(),
+				age:$("#age").val()
+			}, */
+			data: $("form").serialize(),// 폼 요소들을 querystring으로 변경!!
+			success:function(){
+				alert("처리 완료");
+			},
+			error:function(){
+				alert("에러 발생");
+			}
+		});
+	});
+	// END:
+</script>
+</html>

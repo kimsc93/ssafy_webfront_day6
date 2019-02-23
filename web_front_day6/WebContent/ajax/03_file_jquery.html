@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<button id="jsonjQuery">json jQuery</button>
+	<button id="xmlget">xml get</button>
+	<button id="movie">영화 정보</button>
+	<ul id="dataarea"></ul>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	// TODO: jsonget에서 click 이벤트 발생 시 info.json를 읽고 내용을
+	//       dataarea에 출력하는 애플리케이션을 작성하시오.
+	$("#jsonjQuery").on("click", function(){
+		$.ajax({
+			type:"get",
+			url:"./info.json",
+			success: function(data, status, xhr){
+				$("#dataarea").empty();
+				$.each(data.movie, function(idx, item){
+					$("#dataarea").append("<li>"+item.title);
+				})
+			},
+			error: function(xhr, status, error){
+				alert("에러 발생: "+error)
+			}
+		});
+	});
+	// END:
+	
+	// TODO: xmlget 버튼이 클릭될 때 info.xml 파일을 읽고 내용을 dataarea에 출력하시오.
+	$("#xmlget").on("click", function(){
+		$.ajax({
+			type:"get",
+			url:"./info.xml",
+			success:function(data){
+				//console.log(data);
+				let titles = $(data).find("title");
+				console.log(titles);
+				$("#dataarea").empty();
+				$(titles).each(function(idx, item){
+					console.log(idx, item);
+					$("#dataarea").append("<li>"+item.innerHTML);
+				});
+			},
+			error: function(){
+				alert("error")
+			}
+		});
+	});
+	// END:
+		
+	// TODO: movie가 클릭될 때 영화 API를 이용해 랭킹과 제목을 출력하시오.
+	$("#movie").on("click", function(){
+		$.ajax({
+			url:"http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json",
+			type:"get",
+			//data:"key=430156241533f1d058c603178cc3ca0e&targetDt=20120101",
+			data:{
+				key:"430156241533f1d058c603178cc3ca0e",
+				targetDt:"20120101"
+			},
+			success:function(data){
+				let arr = data.boxOfficeResult.dailyBoxOfficeList;
+				console.log(arr);
+				$("#dataarea").empty();
+				$(arr).each(function(idx, item){
+					$("#dataarea").append("<li>"+item.rank+" : "+item.movieNm);
+				});
+			},
+			error:function(){
+				alert("error");
+			}
+		});
+	});
+	// END:
+</script>
+</html>

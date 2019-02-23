@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<fieldset>
+		<legend>개별 정보</legend>
+		<input type="text" id="id">
+		<input type="text" id="email">
+		<br>
+		<button id="add">추가/수정</button>
+		<button id="del">삭제</button>
+		<span id="result"></span>
+		<button id="clear">초기화</button>
+	</fieldset>
+	<fieldset>
+		<legend>전체 정보</legend>
+		<ul id="dataarea"></ul>
+	</fieldset>
+</body>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	let info;// users를 키로 객체 형태로 사용자 정보 저장
+	let storage = window.localStorage;
+	// TODO: 화면 로딩 시 스토리지에서 전체 객체 정보 가져오기
+	function load() {
+		info = storage.getItem("users");
+		if (info) {
+			// dataarea에 사용자의 id를 출력하세요.
+			console.log(info);
+			info = JSON.parse(info);
+			$("#dataarea").empty();
+			for(let key in info){
+				$("#dataarea").append("<li>"+key);
+				//console.log(info[key].email);
+			}
+		} else {
+			// 데이터가 없었다면--> 새로 만들어주기
+			info = {};
+		}
+	}
+	load();
+	// END:
+
+	// TODO: id가 주어졌을 때 해당 id의 사용자 정보를 리턴하시오.	
+
+	function select(id) {
+		return info[id];
+	}
+	// END:
+
+	// TODO: clear 버튼이 클릭될 때 id와 email을 초기화 하시오.	
+	$("#clear").on("click", function() {
+		$("#id").val("");
+		$("#email").val("");
+	});
+	// END:
+	
+	// TODO: add click 시 새로운 사용자 객체를 info에 저장 하시오.
+
+	$("#add").on("click", function() {
+		let user = {
+			id : $("#id").val(),
+			email : $("#email").val()
+		};
+
+		if (select(user.id)) {
+			// 만약 기존 사용자가 있다면??
+			let conf = confirm("동일한 사용자가 있습니다. 수정?")
+			if(conf){
+				info[user.id] = user;
+				$("#result").html("수정되었습니다.");
+			}
+		} else {
+			// 기존 사용자가 없다면??
+			info[user.id] = user;
+			$("#result").html("저장되었습니다.");
+		}
+		storage.setItem("users", JSON.stringify(info));
+		load();
+		console.log(info);
+	});
+	// END:
+
+	// TODO: dataarea의 li를 클릭할 때 사용자 정보를 조회해서 id와 email에 출력하시오.
+	$("#dataarea").on("click", "li", function(){
+		console.log($(this).html());
+		let user = select($(this).html());
+		if(user){
+			$("#id").val(user.id);
+			$("#email").val(user.email);
+		}
+	});
+	// END:
+
+	// TODO: del 버튼이 클릭될 때 선택된 아이템을 삭제하시오.
+	$("#del").on("click", function(){
+		let id = $("#id").val();
+		
+		/* info = {
+		"hong":{id:"hong", email="abc"},
+		"jang":{id:"jang", email="def"},
+		"id":"some"
+	} */
+		delete info[id];
+		//delete info.id;
+		//delete info.hong
+		console.log(info);
+		storage.setItem("users", JSON.stringify(info));
+		load();
+	})
+	// END:
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+</script>
+</html>

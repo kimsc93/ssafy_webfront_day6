@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+
+</body>
+<script>
+	let storage = window.localStorage;
+	storage.setItem("name", "홍길동");
+	console.log(storage.getItem("name"));
+	let user = {
+			name:"hong",
+			age:30
+	};
+	storage.setItem(user.name, JSON.stringify(user));
+	let item = storage.getItem(user.name);
+	console.log(item);
+	let reUser = JSON.parse(item);
+	console.log(reUser);
+	
+	
+	
+</script>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="css/basic.css" />
+<style type="text/css">
+.poster {
+	width: 150px;
+	height: 150px;
+}
+
+.center {
+	text-align: center;
+}
+
+#list {
+	width: 80%;
+	margin: 0 auto;
+}
+</style>
+
+</head>
+<body>
+	<article class="main">
+		<section>
+			<table id="list" class="center">
+
+				<caption class="caption">찜 리스트</caption>
+				<thead>
+					<tr>
+						<th>이미지</th>
+						<th>상품번호</th>
+						<th>상품이름</th>
+						<th>가격</th>
+						<th>삭제</th>
+					</tr>
+				</thead>
+				<tbody id="content">
+				</tbody>
+			</table>
+		</section>
+		<section class="toalprice" id="price"></section>
+		<section class="link">
+			<table class="center">
+				<tr>
+					<td align="center">
+						<a href="">주문하러 가기</a>
+						<a href="index.html">DVD 목록</a>
+					</td>
+				</tr>
+			</table>
+		</section>
+	</article>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript">
+	// TODO: 화면이 로딩될 때 찜 목록을 테이블에 출력하시오.
+	// @@ price영역에 모든 DVD의 총 주문 가격을 출력한다.
+	// @@ 삭제 버튼에는 deleteCart 클래스를 추가한다.
+	let info;
+	function refreshPage() {
+		$("#content").empty();
+		let totalPrice = 0;
+		info = localStorage.getItem("info");
+		if (info) {
+			info = JSON.parse(info);
+			for ( let key in info) {
+				let $tr = $("<tr>");
+				$tr.append("<td><img class='poster' src='"+info[key].img+"'/></td>");
+				$tr.append("<td>" + info[key].no + "</td>");
+				$tr.append("<td>" + info[key].title + "</td>");
+				$tr.append("<td>" + info[key].price + "</td>");
+				$tr.append("<td><button class='deleteCart' value='"+info[key].no+"'>삭제</button></td>");
+				$("#content").append($tr);
+				totalPrice += parseInt(info[key].price);
+			}
+		}
+		$('#price').html("주문 가격:" + totalPrice);
+	}
+	refreshPage();
+	// END:
+
+	// TODO: 현재는 물론 향후에 #content영역에 추가되는 deleteCart 클래스 버튼이 클릭될 때 해당 row의 dvd를 삭제하시오.	
+	$("#content").on("click", ".deleteCart", function() {
+		let y = confirm($(this).val() + "을 삭제하시겠습니까?");
+		if (y) {
+			let no = $(this).val();
+			delete info[no];
+			localStorage.setItem("info", JSON.stringify(info));
+			refreshPage();
+		}
+	});
+	// END:
+</script>
+</html>
